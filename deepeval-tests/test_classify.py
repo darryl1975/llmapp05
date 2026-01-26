@@ -93,7 +93,9 @@ def build_classify_test_cases():
 
 
 classify_test_cases = build_classify_test_cases()
-classify_dataset = EvaluationDataset(test_cases=classify_test_cases)
+classify_dataset = EvaluationDataset()
+for tc in classify_test_cases:
+    classify_dataset.add_test_case(tc)
 
 
 # ---------------------------------------------------------------------------

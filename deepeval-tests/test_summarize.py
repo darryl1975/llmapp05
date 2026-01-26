@@ -140,7 +140,9 @@ def build_summarize_test_cases():
 
 
 summarize_test_cases = build_summarize_test_cases()
-summarize_dataset = EvaluationDataset(test_cases=summarize_test_cases)
+summarize_dataset = EvaluationDataset()
+for tc in summarize_test_cases:
+    summarize_dataset.add_test_case(tc)
 
 
 # ---------------------------------------------------------------------------

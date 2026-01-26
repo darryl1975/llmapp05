@@ -99,7 +99,9 @@ def build_sentiment_test_cases():
 
 
 sentiment_test_cases = build_sentiment_test_cases()
-sentiment_dataset = EvaluationDataset(test_cases=sentiment_test_cases)
+sentiment_dataset = EvaluationDataset()
+for tc in sentiment_test_cases:
+    sentiment_dataset.add_test_case(tc)
 
 
 # ---------------------------------------------------------------------------

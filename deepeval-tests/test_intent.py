@@ -103,7 +103,9 @@ def build_intent_test_cases():
 
 
 intent_test_cases = build_intent_test_cases()
-intent_dataset = EvaluationDataset(test_cases=intent_test_cases)
+intent_dataset = EvaluationDataset()
+for tc in intent_test_cases:
+    intent_dataset.add_test_case(tc)
 
 
 # ---------------------------------------------------------------------------
