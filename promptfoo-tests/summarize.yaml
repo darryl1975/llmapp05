@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'POST /api/ai/summarize - Text Summarization'
+
+providers:
+  - id: https
+    config:
+      url: 'http://localhost:8080/api/ai/summarize'
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+      body:
+        text: '{{text}}'
+      transformResponse: 'JSON.stringify(json)'
+
+prompts:
+  - '{{text}}'
+
+tests:
+  # Test 1: Summarize a long paragraph
+  - vars:
+      text: >-
+        Climate change is one of the most pressing issues facing humanity today.
+        Rising global temperatures are causing glaciers to melt, sea levels to
+        rise, and extreme weather events to become more frequent and severe.
+        Scientists have warned that without significant reductions in greenhouse
+        gas emissions, the planet could warm by more than 2 degrees Celsius
+        above pre-industrial levels by the end of the century. This would lead
+        to catastrophic consequences including widespread flooding, droughts,
+        food shortages, and mass displacement of populations. Governments around
+        the world are implementing various strategies to combat climate change,
+        including transitioning to renewable energy sources, improving energy
+        efficiency, and investing in carbon capture technologies.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.summary === 'string' && parsed.summary.length > 10;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.keyPoints) && parsed.keyPoints.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.wordCount === 'number' && parsed.wordCount > 0;
+
+  # Test 2: Summarize a technical text
+  - vars:
+      text: >-
+        Quantum computing represents a fundamental shift in computational
+        paradigms. Unlike classical computers that use bits representing 0 or 1,
+        quantum computers use qubits that can exist in superposition states.
+        This allows quantum computers to process certain types of problems
+        exponentially faster than classical computers. Key applications include
+        cryptography, drug discovery, materials science, and optimization
+        problems. However, quantum computers face significant challenges
+        including decoherence, error rates, and the need for extremely low
+        operating temperatures near absolute zero.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.summary === 'string' && parsed.summary.length > 10;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.keyPoints) && parsed.keyPoints.length >= 2;
+
+  # Test 3: Summarize a short text
+  - vars:
+      text: >-
+        The new restaurant downtown serves excellent Italian food at reasonable
+        prices with friendly staff and a cozy atmosphere.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.summary === 'string' && parsed.summary.length > 0;

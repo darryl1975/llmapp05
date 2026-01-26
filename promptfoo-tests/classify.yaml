@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'POST /api/ai/classify - Text Classification'
+
+providers:
+  - id: https
+    config:
+      url: 'http://localhost:8080/api/ai/classify'
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+      body:
+        text: '{{text}}'
+      transformResponse: 'JSON.stringify(json)'
+
+prompts:
+  - '{{text}}'
+
+tests:
+  # Test 1: Technology-related text
+  - vars:
+      text: >-
+        Artificial intelligence and machine learning are transforming the
+        healthcare industry by enabling faster diagnoses and personalized
+        treatment plans.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.labels) && parsed.labels.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryCategory === 'string' && parsed.primaryCategory.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.confidence === 'number' && parsed.confidence >= 0 && parsed.confidence <= 1;
+
+  # Test 2: Sports-related text
+  - vars:
+      text: >-
+        The team won the championship after a thrilling overtime victory,
+        scoring the winning goal in the final seconds of the match.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.labels) && parsed.labels.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryCategory === 'string' && parsed.primaryCategory.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.confidence === 'number' && parsed.confidence >= 0 && parsed.confidence <= 1;
+
+  # Test 3: Finance-related text
+  - vars:
+      text: >-
+        The stock market experienced significant volatility today as investors
+        reacted to the Federal Reserve's decision to raise interest rates by
+        a quarter point.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.labels) && parsed.labels.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryCategory === 'string' && parsed.primaryCategory.length > 0;
+
+  # Test 4: Very short text edge case
+  - vars:
+      text: 'Hello'
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.labels) && typeof parsed.primaryCategory === 'string';

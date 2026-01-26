@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'POST /api/ai/intent - Intent Detection'
+
+providers:
+  - id: https
+    config:
+      url: 'http://localhost:8080/api/ai/intent'
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+      body:
+        text: '{{text}}'
+      transformResponse: 'JSON.stringify(json)'
+
+prompts:
+  - '{{text}}'
+
+tests:
+  # Test 1: Question intent
+  - vars:
+      text: >-
+        What are the best restaurants near Times Square that serve Italian food
+        and are open late on weekends?
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryIntent === 'string' && parsed.primaryIntent.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.intentCategory && parsed.intentCategory.toLowerCase() === 'question';
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.confidence === 'number' && parsed.confidence >= 0 && parsed.confidence <= 1;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.secondaryIntents);
+
+  # Test 2: Command intent
+  - vars:
+      text: >-
+        Turn off the lights in the living room and set the thermostat to 72
+        degrees.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryIntent === 'string' && parsed.primaryIntent.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.intentCategory && parsed.intentCategory.toLowerCase() === 'command';
+
+  # Test 3: Request intent
+  - vars:
+      text: >-
+        Could you please send me the latest sales report and schedule a meeting
+        with the marketing team for next Thursday?
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryIntent === 'string' && parsed.primaryIntent.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.intentCategory && ['request', 'command'].includes(parsed.intentCategory.toLowerCase());
+
+  # Test 4: Statement intent
+  - vars:
+      text: >-
+        The quarterly earnings report shows that revenue increased by 15 percent
+        compared to the same period last year, driven primarily by growth in the
+        cloud services division.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryIntent === 'string' && parsed.primaryIntent.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.intentCategory && parsed.intentCategory.toLowerCase() === 'statement';
+
+  # Test 5: Short request edge case
+  - vars:
+      text: 'Help me'
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.primaryIntent === 'string' && parsed.primaryIntent.length > 0;

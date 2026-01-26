@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: 'POST /api/ai/sentiment - Sentiment Analysis'
+
+providers:
+  - id: https
+    config:
+      url: 'http://localhost:8080/api/ai/sentiment'
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+      body:
+        text: '{{text}}'
+      transformResponse: 'JSON.stringify(json)'
+
+prompts:
+  - '{{text}}'
+
+tests:
+  # Test 1: Clearly positive sentiment
+  - vars:
+      text: >-
+        I absolutely love this product! The quality is outstanding and the
+        customer service was incredibly helpful. Best purchase I have ever made!
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.overallSentiment && parsed.overallSentiment.toLowerCase() === 'positive';
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.sentimentScore === 'number' && parsed.sentimentScore > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.emotions) && parsed.emotions.length > 0;
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.confidence === 'number' && parsed.confidence >= 0 && parsed.confidence <= 1;
+
+  # Test 2: Clearly negative sentiment
+  - vars:
+      text: >-
+        This is the worst experience I have ever had. The product broke after
+        one day and the company refuses to issue a refund. Terrible service
+        and a complete waste of money.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.overallSentiment && parsed.overallSentiment.toLowerCase() === 'negative';
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.sentimentScore === 'number' && parsed.sentimentScore < 0;
+
+  # Test 3: Neutral sentiment
+  - vars:
+      text: >-
+        The meeting is scheduled for 3pm on Tuesday in conference room B.
+        Please bring your laptop and a copy of the quarterly report.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return parsed.overallSentiment && parsed.overallSentiment.toLowerCase() === 'neutral';
+
+  # Test 4: Very short positive text
+  - vars:
+      text: 'I am happy'
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return ['positive', 'negative', 'neutral'].includes(parsed.overallSentiment?.toLowerCase());
+
+  # Test 5: Mixed sentiment text
+  - vars:
+      text: >-
+        The food was absolutely delicious but the service was terrible and we
+        had to wait over an hour for our order.
+    assert:
+      - type: is-json
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return typeof parsed.sentimentScore === 'number';
+      - type: javascript
+        value: |
+          const parsed = JSON.parse(output);
+          return Array.isArray(parsed.emotions) && parsed.emotions.length > 0;
