@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Analysis</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>AI Text Analysis</h1>
+            <p class="subtitle">Analyze text using AI-powered summarization, sentiment analysis, intent detection, and classification</p>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section">
+                <div class="textarea-wrapper">
+                    <textarea
+                        id="inputText"
+                        placeholder="Enter your text here to analyze..."
+                        rows="6"
+                    ></textarea>
+                    <span class="char-count" id="charCount">0 characters</span>
+                </div>
+
+                <div class="analysis-options">
+                    <h3>Analysis Type</h3>
+                    <div class="options-grid">
+                        <button class="option-btn selected" data-type="summarize">
+                            <span class="option-icon">&#128221;</span>
+                            <span class="option-label">Summarize</span>
+                            <span class="option-desc">Get a concise summary with key points</span>
+                        </button>
+                        <button class="option-btn" data-type="sentiment">
+                            <span class="option-icon">&#128522;</span>
+                            <span class="option-label">Sentiment</span>
+                            <span class="option-desc">Analyze emotional tone and feelings</span>
+                        </button>
+                        <button class="option-btn" data-type="intent">
+                            <span class="option-icon">&#127919;</span>
+                            <span class="option-label">Intent</span>
+                            <span class="option-desc">Detect the purpose behind the text</span>
+                        </button>
+                        <button class="option-btn" data-type="classify">
+                            <span class="option-icon">&#127991;&#65039;</span>
+                            <span class="option-label">Classify</span>
+                            <span class="option-desc">Categorize and label the content</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="analyzeBtn" disabled>
+                        Analyze
+                    </button>
+                    <button class="btn btn-secondary" id="analyzeAllBtn" disabled>
+                        Run All Analyses
+                    </button>
+                    <button class="btn btn-outline" id="clearAllBtn">
+                        Clear
+                    </button>
+                </div>
+            </section>
+
+            <section class="results-section">
+                <div class="results-header">
+                    <h2>Results</h2>
+                    <button class="btn btn-text" id="clearResultsBtn" style="display: none;">Clear Results</button>
+                </div>
+
+                <div class="empty-state" id="emptyState">
+                    <span class="empty-icon">&#128202;</span>
+                    <p>No analysis results yet. Enter some text and click Analyze to get started.</p>
+                </div>
+
+                <div class="results-list" id="resultsList"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
