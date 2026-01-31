@@ -1,9 +1,0 @@
-spring:
-  ai:
-    openai:
-      base-url: https://ollama.com
-      api-key: test-key
-      chat:
-        options:
-          model: gemma3:12b
-          temperature: 0.7

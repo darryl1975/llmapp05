@@ -1,0 +1,35 @@
+services:
+  llm-multiroute:
+    build: ./llm-multiroute
+    container_name: llm-multiroute
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_API_KEY=${OLLAMA_API_KEY}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-https://ollama.com}
+      - OLLAMA_TEMPERATURE=${OLLAMA_TEMPERATURE:-0.7}
+      - OLLAMA_MODEL_CLASSIFY=${OLLAMA_MODEL_CLASSIFY:-gemma3:4b}
+      - OLLAMA_MODEL_SENTIMENT=${OLLAMA_MODEL_SENTIMENT:-ministral-3:3b}
+      - OLLAMA_MODEL_SUMMARIZE=${OLLAMA_MODEL_SUMMARIZE:-ministral-3:8b}
+      - OLLAMA_MODEL_INTENT=${OLLAMA_MODEL_INTENT:-gemma3:12b}
+      - SERVER_PORT=8082
+    networks:
+      - llm-network
+
+  llm-frontend-python:
+    build: ./llm-frontend-python
+    container_name: llm-frontend-python
+    ports:
+      - "5000:5000"
+    environment:
+      - BACKEND_URL=http://llm-multiroute:8080
+      - FLASK_PORT=5000
+      - FLASK_DEBUG=false
+    depends_on:
+      - llm-multiroute
+    networks:
+      - llm-network
+
+networks:
+  llm-network:
+    driver: bridge

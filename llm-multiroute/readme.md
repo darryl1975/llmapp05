@@ -105,7 +105,7 @@
 │ pip install -r requirements.txt                                          │
 │ # Set env vars or create .env                                            │
 │ export OLLAMA_API_KEY=your_key                                           │
-│ python -m uvicorn app.main:app --port 8082 --reload                      │
+│ python -m uvicorn app.main:app --port 8080 --reload                      │
 │ # Open http://localhost:8082/swagger-ui.html                             │
 │ # Test: GET /api/ai/routes — should show 4 model assignments             │
 │ # Test: POST /api/ai/classify with {"text": "AI is transforming          │
