@@ -36,3 +36,22 @@
   Secret: OPENAI_API_KEY
   Used By: deepeval only
   Purpose: DeepEval's judge LLM for evaluation metrics
+
+## Updated pipeline stages
+
+  llm-multiroute: Lint → Unit Tests → Build Image → Trivy Scan → Push  
+  llm-frontend-python: Lint → Build Image → Trivy Scan → Push          
+                                                                       
+  What the Trivy step does                                             
+                                                                       
+  1. Build for scanning — The image is built with load: true into the  
+  local Docker daemon (no push yet), tagged as <image>:scan            
+  2. Trivy scan — aquasecurity/trivy-action scans the local image for  
+  vulnerabilities                                                      
+    - Reports in table format for readable CI output                   
+    - exit-code: '1' — fails the workflow if vulnerabilities are found 
+    - severity: 'CRITICAL,HIGH' — only blocks on CRITICAL and HIGH     
+  severity issues (MEDIUM/LOW won't fail the build)                    
+  3. Push — Only runs if the Trivy scan passes and it's not a pull     
+  request. Uses the build cache so the push is fast since the image    
+  layers already exist.    
