@@ -1,3 +1,4 @@
 # glibc: Integer overflow in memalign leads to heap corruption
 # No fix available upstream (status: affected) - suppress until Debian publishes a patch
 CVE-2026-0861
+CVE-2025-62727
