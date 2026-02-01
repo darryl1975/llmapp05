@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-import pytest
+# import pytest
 
 from app.router.model_router import ModelRouter, TaskType
 
