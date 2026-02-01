@@ -69,3 +69,26 @@
   remaining glibc findings are suppressed. Once Debian publishes a     
   glibc patch, you can remove CVE-2026-0861 from .trivyignore and the  
   upgrade step will pick up the fix automatically.  
+
+  # Fixed...
+
+Dependencies resolve cleanly. FastAPI 0.115.6 pulls in starlette     
+  0.41.3, which is well past the 0.40.0 fix threshold for              
+  CVE-2024-47874.                                                      
+                                                                       
+  Summary                                                              
+  Package: fastapi                                                     
+  Before: 0.115.0                                                      
+  After: 0.115.6                                                       
+  Why: Brings in starlette >= 0.40.0                                   
+  ────────────────────────────────────────                             
+  Package: uvicorn                                                     
+  Before: 0.30.6                                                       
+  After: 0.32.1                                                        
+  Why: Compatible with updated FastAPI                                 
+  ────────────────────────────────────────                             
+  Package: starlette (transitive)                                      
+  Before: 0.38.6                                                       
+  After: 0.41.3                                                        
+  Why: Fixes CVE-2024-47874 (DoS via multipart/form-data)              
+  This should clear the Trivy scan for the llm-multiroute image.
