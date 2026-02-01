@@ -54,4 +54,18 @@
   severity issues (MEDIUM/LOW won't fail the build)                    
   3. Push — Only runs if the Trivy scan passes and it's not a pull     
   request. Uses the build cache so the push is fast since the image    
-  layers already exist.    
+  layers already exist. 
+
+
+    .trivyignore created at the repo root with CVE-2026-0861 suppressed —
+   the glibc integer overflow in memalign that has no upstream fix     
+  available yet.                                                       
+                                                                       
+  Both workflows updated to pass trivyignores: .trivyignore to the     
+  Trivy action, so the scanner skips that CVE.                         
+                                                                       
+  The pipeline will now pass since the 6 OpenSSL findings were already 
+  resolved by the apt-get upgrade in the Dockerfiles, and the 2        
+  remaining glibc findings are suppressed. Once Debian publishes a     
+  glibc patch, you can remove CVE-2026-0861 from .trivyignore and the  
+  upgrade step will pick up the fix automatically.  

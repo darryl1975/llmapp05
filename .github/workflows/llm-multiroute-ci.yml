@@ -102,6 +102,7 @@ jobs:
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
+          trivyignores: .trivyignore
 
       - name: Login to Docker Hub
         if: github.event_name != 'pull_request'
