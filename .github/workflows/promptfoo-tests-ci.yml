@@ -1,0 +1,74 @@
+name: PromptFoo Tests
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'promptfoo-tests/**'
+      - 'llm-multiroute/**'
+      - '.github/workflows/promptfoo-tests-ci.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'promptfoo-tests/**'
+      - 'llm-multiroute/**'
+      - '.github/workflows/promptfoo-tests-ci.yml'
+  workflow_dispatch:
+
+env:
+  OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+  OLLAMA_BASE_URL: ${{ secrets.OLLAMA_BASE_URL }}
+
+jobs:
+  promptfoo-eval:
+    name: PromptFoo Evaluation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build and start backend
+        run: |
+          docker compose up -d llm-multiroute
+        working-directory: .
+
+      - name: Wait for backend to be ready
+        run: |
+          echo "Waiting for backend to be ready..."
+          for i in $(seq 1 30); do
+            if curl -s http://localhost:8080/api/ai/routes > /dev/null 2>&1; then
+              echo "Backend is ready."
+              exit 0
+            fi
+            echo "Attempt $i/30 - backend not ready yet..."
+            sleep 5
+          done
+          echo "Backend failed to start."
+          docker compose logs llm-multiroute
+          exit 1
+        working-directory: .
+
+      - name: Run PromptFoo classify evaluation
+        working-directory: promptfoo-tests
+        run: npx promptfoo@latest eval -c classify.yaml
+
+      - name: Run PromptFoo sentiment evaluation
+        working-directory: promptfoo-tests
+        run: npx promptfoo@latest eval -c sentiment.yaml
+
+      - name: Run PromptFoo summarize evaluation
+        working-directory: promptfoo-tests
+        run: npx promptfoo@latest eval -c summarize.yaml
+
+      - name: Run PromptFoo intent evaluation
+        working-directory: promptfoo-tests
+        run: npx promptfoo@latest eval -c intent.yaml
+
+      - name: Tear down backend
+        if: always()
+        run: docker compose down
+        working-directory: .
