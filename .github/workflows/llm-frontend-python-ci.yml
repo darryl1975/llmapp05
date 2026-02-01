@@ -73,6 +73,8 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: "true"
         with:
           image-ref: darryl1975/llm-frontend-python:scan
           format: 'table'
