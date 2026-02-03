@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: llm-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-frontend-app
+  namespace: llm-frontend
+  labels:
+    app: llm-frontend-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llm-frontend-app
+  template:
+    metadata:
+      labels:
+        app: llm-frontend-app
+    spec:
+      containers:
+        - name: llm-frontend-container
+          image: darryl1975/llm-frontend-python:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: FLASK_PORT
+              value: "5000"
+            - name: FLASK_DEBUG
+              value: "false"
+            - name: BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: llm-frontend-config
+                  key: BACKEND_URL
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llm-frontend-service
+  namespace: llm-frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: llm-frontend-app
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: llm-frontend-config
+  namespace: llm-frontend
+data:
+  BACKEND_URL: "http://llm-multiroute-service.llm-multiroute-backend.svc.cluster.local:8080"
