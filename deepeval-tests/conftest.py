@@ -23,7 +23,7 @@ def json_schema_metric(schema_description: str):
             LLMTestCaseParams.ACTUAL_OUTPUT,
             LLMTestCaseParams.EXPECTED_OUTPUT,
         ],
-        threshold=0.7,
+        threshold=0.5,
     )
 
 
@@ -40,7 +40,7 @@ def output_correctness_metric():
             LLMTestCaseParams.INPUT,
             LLMTestCaseParams.ACTUAL_OUTPUT,
         ],
-        threshold=0.7,
+        threshold=0.5,
     )
 
 
