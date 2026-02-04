@@ -9,7 +9,7 @@ import json
 import pytest
 from deepeval import assert_test
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
-from deepeval.metrics import GEval, AnswerRelevancyMetric
+from deepeval.metrics import GEval
 from deepeval.dataset import EvaluationDataset
 
 from api_client import detect_intent
