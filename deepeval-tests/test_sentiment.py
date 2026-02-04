@@ -110,7 +110,7 @@ for tc in sentiment_test_cases:
 
 SCHEMA_DESC = (
     "The JSON must contain: 'overallSentiment' (string: positive, negative, "
-    "or neutral), 'sentimentScore' (number between -1 and 1), 'emotions' "
+    "neutral, or mixed), 'sentimentScore' (number between -1 and 1), 'emotions' "
     "(array of strings), and 'confidence' (number between 0 and 1)."
 )
 
@@ -121,7 +121,7 @@ sentiment_correctness_metric = GEval(
     criteria=(
         "Evaluate whether the sentiment analysis is accurate for the input text. "
         "Check that: (1) overallSentiment correctly identifies the dominant "
-        "sentiment as positive, negative, or neutral, (2) sentimentScore is "
+        "sentiment as positive, negative, neutral, or mixed, (2) sentimentScore is "
         "numerically consistent with the overallSentiment (positive text should "
         "have positive scores, negative text should have negative scores), "
         "(3) the detected emotions are plausible for the given text."
