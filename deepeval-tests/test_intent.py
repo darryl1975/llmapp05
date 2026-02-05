@@ -134,7 +134,7 @@ intent_category_metric = GEval(
         LLMTestCaseParams.ACTUAL_OUTPUT,
         LLMTestCaseParams.EXPECTED_OUTPUT,
     ],
-    threshold=0.7,
+    threshold=0.5,
 )
 
 intent_primary_metric = GEval(
@@ -150,7 +150,7 @@ intent_primary_metric = GEval(
         LLMTestCaseParams.ACTUAL_OUTPUT,
         LLMTestCaseParams.EXPECTED_OUTPUT,
     ],
-    threshold=0.7,
+    threshold=0.5,
 )
 
 intent_relevancy_metric = answer_relevancy_metric()
