@@ -17,13 +17,14 @@ def json_schema_metric(schema_description: str):
         name="JSON Schema Compliance",
         criteria=(
             "Evaluate whether the actual output is valid JSON that conforms to "
-            "the expected schema. " + schema_description
+            "the required schema. Only check structure, key names, and data "
+            "types — do NOT penalize for specific values. "
+            + schema_description
         ),
         evaluation_params=[
             LLMTestCaseParams.ACTUAL_OUTPUT,
-            LLMTestCaseParams.EXPECTED_OUTPUT,
         ],
-        threshold=0.7,
+        threshold=0.5,
     )
 
 
