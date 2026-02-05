@@ -115,7 +115,7 @@ for tc in intent_test_cases:
 SCHEMA_DESC = (
     "The JSON must contain: 'primaryIntent' (string), 'secondaryIntents' "
     "(array of strings), 'intentCategory' (string: one of question, request, "
-    "statement, or command), and 'confidence' (number between 0 and 1)."
+    "command, or statement), and 'confidence' (number between 0 and 1)."
 )
 
 intent_schema_metric = json_schema_metric(SCHEMA_DESC)

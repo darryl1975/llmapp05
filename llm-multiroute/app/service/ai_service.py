@@ -84,6 +84,11 @@ class AIService:
             "Detect the intent behind the following text. "
             "Respond with ONLY valid JSON, no additional text or explanation.\n\n"
             f"Text: {text}\n\n"
+            "intentCategory must be exactly one of:\n"
+            "- question: the text asks for information\n"
+            "- request: the text politely asks someone to do something\n"
+            "- command: the text gives a direct order or instruction\n"
+            "- statement: the text declares facts or information\n\n"
             "Return JSON in this exact format:\n"
             '{"primaryIntent": "main_intent", "secondaryIntents": ["intent1", "intent2"], '
             '"intentCategory": "question", "confidence": 0.9}'
