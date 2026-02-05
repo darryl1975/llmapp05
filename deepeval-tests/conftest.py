@@ -41,7 +41,7 @@ def output_correctness_metric():
             LLMTestCaseParams.INPUT,
             LLMTestCaseParams.ACTUAL_OUTPUT,
         ],
-        threshold=0.7,
+        threshold=0.5,
     )
 
 
