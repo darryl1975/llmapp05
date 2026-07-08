@@ -4,7 +4,7 @@
   "private": true,
   "description": "Promptfoo tests for LLM Spring AI API endpoints",
   "scripts": {
-    "eval": "npx promptfoo@latest eval -c classify.yaml && npx promptfoo@latest eval -c sentiment.yaml && npx promptfoo@latest eval -c summarize.yaml && npx promptfoo@latest eval -c intent.yaml",
+    "eval": "npx promptfoo@0.120.25 eval -c classify.yaml && npx promptfoo@0.120.25 eval -c sentiment.yaml && npx promptfoo@0.120.25 eval -c summarize.yaml && npx promptfoo@0.120.25 eval -c intent.yaml",
     "eval:classify": "npx promptfoo@latest eval -c classify.yaml",
     "eval:sentiment": "npx promptfoo@latest eval -c sentiment.yaml",
     "eval:summarize": "npx promptfoo@latest eval -c summarize.yaml",
